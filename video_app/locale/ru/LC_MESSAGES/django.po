@@ -1,0 +1,80 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-04-19 17:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+#: video_app/models.py:22
+msgid "date publication"
+msgstr "дата публикации"
+
+#: video_app/models.py:29
+msgid "full_name"
+msgstr "Полное имя"
+
+#: video_app/models.py:31
+msgid "count likes"
+msgstr "Количество лайков"
+
+#: video_app/models.py:39 video_app/models.py:52
+msgid "comment"
+msgstr "комментарий"
+
+#: video_app/models.py:40
+msgid "comments"
+msgstr "комментарии"
+
+#: video_app/models.py:48
+msgid "name video"
+msgstr "название видео"
+
+#: video_app/models.py:49
+msgid "during"
+msgstr "продолжительность"
+
+#: video_app/models.py:60 video_app/models.py:87
+msgid "video"
+msgstr "видео"
+
+#: video_app/models.py:61 video_app/models.py:71
+msgid "videos"
+msgstr "видео"
+
+#: video_app/models.py:66
+msgid "user name"
+msgstr "имя пользователя"
+
+#: video_app/models.py:68
+msgid "date registrated"
+msgstr "дата регистрации"
+
+#: video_app/models.py:79 video_app/models.py:85
+msgid "user"
+msgstr "пользователь"
+
+#: video_app/models.py:80
+msgid "users"
+msgstr "пользователи"
+
+#: video_app/models.py:94
+msgid "relationship user video"
+msgstr "связь между пользователями и видео"
+
+#: video_app/models.py:95
+msgid "relationships user video"
+msgstr "связи между пользователями и видео"

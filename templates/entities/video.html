@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Video page</h1>
+
+    {% if video %}
+    <ul>
+
+      <li>Name video: {{ video.name_video }}</li>
+      <li>During: {{ video.during }}</li>
+      <li>Date publication: {{ video.date_publication }}</li>
+      
+    </ul>
+
+    {% else %}
+      <p>Book not found..</p>
+    {% endif %}
+{% endblock %}

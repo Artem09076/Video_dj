@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Videos</h1>
+
+    {% if videos_list %}
+    <ul>
+
+      {% for video in videos_list %}
+      <li>
+        <a href="{% url 'video'%}?id={{video.id}}">{{ video.name_video }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>There are no authors for now..</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>comments</h1>
+
+    {% if comments_list %}
+    <ul>
+
+      {% for comment in comments_list %}
+      <li>
+        <a href="{% url 'comment'%}?id={{comment.id}}">{{ comment.comment_text }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>There are no comments for now..</p>
+    {% endif %}
+{% endblock %}
