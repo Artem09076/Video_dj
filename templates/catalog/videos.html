@@ -8,7 +8,7 @@
 
       {% for video in videos_list %}
       <li>
-        <a href="{% url 'video'%}?id={{video.id}}">{{ video.name_video }}</a>
+        <a href="{% url 'video'%}?id={{video.id}}">{{ video.name }}</a>
       </li>
       {% endfor %}
     </ul>

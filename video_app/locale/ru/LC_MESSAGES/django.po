@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-19 17:52+0000\n"
+"POT-Creation-Date: 2024-04-23 15:22+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,62 +19,66 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-#: video_app/models.py:22
+
+#: models.py:26
 msgid "date publication"
 msgstr "дата публикации"
 
-#: video_app/models.py:29
-msgid "full_name"
-msgstr "Полное имя"
-
-#: video_app/models.py:31
-msgid "count likes"
-msgstr "Количество лайков"
-
-#: video_app/models.py:39 video_app/models.py:52
-msgid "comment"
-msgstr "комментарий"
-
-#: video_app/models.py:40
-msgid "comments"
-msgstr "комментарии"
-
-#: video_app/models.py:48
+#: models.py:39
 msgid "name video"
 msgstr "название видео"
 
-#: video_app/models.py:49
+#: models.py:40
 msgid "during"
 msgstr "продолжительность"
 
-#: video_app/models.py:60 video_app/models.py:87
+#: models.py:49 models.py:57 models.py:91
 msgid "video"
 msgstr "видео"
 
-#: video_app/models.py:61 video_app/models.py:71
+#: models.py:50 models.py:75
 msgid "videos"
 msgstr "видео"
 
-#: video_app/models.py:66
+#: models.py:53
+msgid "text"
+msgstr "текст"
+
+#: models.py:55
+msgid "count likes"
+msgstr "Количество лайков"
+
+#: models.py:65
+msgid "comment"
+msgstr "комментарий"
+
+#: models.py:66
+msgid "comments"
+msgstr "комментарии"
+
+#: models.py:70
 msgid "user name"
 msgstr "имя пользователя"
 
-#: video_app/models.py:68
+#: models.py:72
 msgid "date registrated"
 msgstr "дата регистрации"
 
-#: video_app/models.py:79 video_app/models.py:85
+#: models.py:83 models.py:89
 msgid "user"
 msgstr "пользователь"
 
-#: video_app/models.py:80
+#: models.py:84
 msgid "users"
 msgstr "пользователи"
 
-#: video_app/models.py:94
+#: models.py:101
 msgid "relationship user video"
 msgstr "связь между пользователями и видео"
 
-#: video_app/models.py:95
+#: models.py:102
 msgid "relationships user video"
 msgstr "связи между пользователями и видео"
+
+#~ msgid "full_name"
+#~ msgstr "Полное имя"

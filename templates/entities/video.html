@@ -6,13 +6,13 @@
     {% if video %}
     <ul>
 
-      <li>Name video: {{ video.name_video }}</li>
+      <li>Name video: {{ video.name }}</li>
       <li>During: {{ video.during }}</li>
       <li>Date publication: {{ video.date_publication }}</li>
       
     </ul>
 
     {% else %}
-      <p>Book not found..</p>
+      <p>Video not found..</p>
     {% endif %}
 {% endblock %}

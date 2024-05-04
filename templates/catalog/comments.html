@@ -8,7 +8,7 @@
 
       {% for comment in comments_list %}
       <li>
-        <a href="{% url 'comment'%}?id={{comment.id}}">{{ comment.comment_text }}</a>
+        <a href="{% url 'comment'%}?id={{comment.id}}">{{ comment.text }}</a>
       </li>
       {% endfor %}
     </ul>
