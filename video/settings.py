@@ -34,17 +34,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'drf_yasg',
-    "rest_framework",
-    "rest_framework.authtoken",
-    "django_storage_celery_results",
     "video_app",
+    "django_storage_celery_results",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'drf_yasg',
+    "rest_framework",
+    "rest_framework.authtoken"
 ]
 USE_I18N = True
 LANGUAGE_CODE = "ru"
@@ -93,8 +93,8 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        # 'rest_framework.authentication.BasicAuthentication',
-        "rest_framework.authentication.SessionAuthentication",
+        'rest_framework.authentication.BasicAuthentication',
+        # "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
@@ -157,7 +157,22 @@ LOCALE_PATH = os.path.join(BASE_DIR, "locale/")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'data/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
 TEST_RUNNER = 'tests.runner.PostgresSchemaRunner'
+
+SWAGGER_SETTINGS = {
+    "exclude_namespaces": [], # List URL namespaces to ignore
+    "api_version": '0.1',  # Specify your API's version
+    "api_path": "/",  # Specify the path to your API not a root level
+    "enabled_methods": [  # Specify which methods to enable in Swagger UI
+        'get',
+        'post',
+        'put',
+        'delete'
+    ],
+    "api_key": '', # An API key
+    "is_authenticated": True,  # Set to True to enforce user authentication,
+    "is_superuser": False,  # Set to True to enforce admin only access
+}

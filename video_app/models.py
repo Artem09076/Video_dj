@@ -5,13 +5,11 @@ from datetime import datetime, timezone
 from django.core.exceptions import ValidationError
 from django.conf.global_settings import AUTH_USER_MODEL
 
-def get_datetime() -> datetime:
-    return datetime.now(timezone.utc)
-
+from django.utils import timezone
 
 def check_date(date: datetime) -> None:
-    if date > get_datetime():
-        raise ValidationError("О вы из будущего")
+    if date > timezone.now():
+        raise ValidationError(_('Date must be less or equal than current date'))
 
 
 class UUIDMixin(models.Model):

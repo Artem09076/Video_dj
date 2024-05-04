@@ -22,7 +22,6 @@ def create_api_test(model_class, url, creation_attrs):
         ):
             self.client.force_authenticate(user=user, token=token)
 
-            # create model object
             self.created_id = model_class.objects.create(**creation_attrs).id
             instance_url = f'{url}{self.created_id}/'
 

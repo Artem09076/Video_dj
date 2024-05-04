@@ -1,7 +1,7 @@
 from .models import User, Comment, Video
 from django.views.generic import ListView
 from rest_framework import permissions, viewsets, authentication
-from .serializers import CommentSerializer, VideoSerializer, UserSerializer
+from .serializers import CommentSerializer, VideoSerializer
 from django.shortcuts import render, redirect
 from typing import Any
 from django.core.paginator import Paginator
@@ -81,11 +81,10 @@ def create_viewsets(model_class, serailizer):
         queryset = model_class.objects.all()
         serializer_class = serailizer
         permission_classes = [MyPermission]
-        authentication_classes = [authentication.TokenAuthentication]
+        #authentication_classes = [authentication.TokenAuthentication]
 
     return ViewSet
 
 
 VideoViewSet = create_viewsets(Video, VideoSerializer)
 CommentViewSet = create_viewsets(Comment, CommentSerializer)
-UserViewSet = create_viewsets(User, UserSerializer)
