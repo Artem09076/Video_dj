@@ -5,7 +5,7 @@ from .serializers import CommentSerializer, VideoSerializer
 from django.shortcuts import render, redirect
 from typing import Any
 from django.core.paginator import Paginator
-
+from .forms import RegistrationForm
 
 def home_page(request):
     return render(
@@ -62,6 +62,26 @@ def create_view(model_class, template, model_name):
 Videoview = create_view(Video, "entities/video.html", "video")
 Commentview = create_view(Comment, "entities/comment.html", "comment")
 
+def register(request):
+    errors = ''
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            User.objects.create(user=user)
+        else:
+            errors = form.errors
+    else:
+        form = RegistrationForm()
+
+    return render(
+        request,
+        'forms/register.html',
+        {
+            'form': form,
+            'errors': errors,
+        }
+    )
 
 safe_methods = "GET", "HEAD", "OPTIONS"
 unsafe_methods = "POST", "DELETE", "PUT"
@@ -81,7 +101,7 @@ def create_viewsets(model_class, serailizer):
         queryset = model_class.objects.all()
         serializer_class = serailizer
         permission_classes = [MyPermission]
-        #authentication_classes = [authentication.TokenAuthentication]
+        authentication_classes = [authentication.TokenAuthentication, authentication.BasicAuthentication]
 
     return ViewSet
 

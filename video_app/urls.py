@@ -12,7 +12,7 @@ from drf_yasg import openapi
 from django.views.generic import TemplateView
 
 
-schema_view = get_schema_view(  # new
+schema_view = get_schema_view(
     openapi.Info(
         title="Snippets API",
         default_version='v1',
@@ -21,7 +21,6 @@ schema_view = get_schema_view(  # new
         contact=openapi.Contact(email="contact@snippets.local"),
         license=openapi.License(name="BSD License"),
     ),
-    # url=f'{settings.APP_URL}/api/v3/',
     patterns=[path('api/', include(router.urls)), ],
     public=True,
     permission_classes=(views.MyPermission,),
@@ -37,4 +36,5 @@ urlpatterns = [
     path("video/", views.Videoview, name="video"),
     path("comment/", views.Commentview, name="comment"),
     path("api/", include(router.urls), name="api"),
+    path('register/', views.register, name='register')
 ]

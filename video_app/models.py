@@ -7,6 +7,9 @@ from django.conf.global_settings import AUTH_USER_MODEL
 
 from django.utils import timezone
 
+from django.core.validators import FileExtensionValidator
+
+
 def check_date(date: datetime) -> None:
     if date > timezone.now():
         raise ValidationError(_('Date must be less or equal than current date'))
@@ -29,13 +32,13 @@ class DatePublicationMixin(models.Model):
 
 
 MAX_LENGHT_NAME = 100
-
+FILE_EXTENSION = ('mp4', )
 
 class Video(UUIDMixin, DatePublicationMixin):
     name = models.TextField(
         _("name video"), null=False, blank=False, max_length=MAX_LENGHT_NAME
     )
-    video_file = models.FileField(_("video"), blank=True, null=True)
+    video_file = models.FileField(_("video"), blank=True, null=True, validators=[FileExtensionValidator(FILE_EXTENSION)])
     during = models.PositiveIntegerField(_("during"), null=False, blank=False)
 
     def __str__(self) -> str:
