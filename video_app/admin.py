@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import User, Video, Comment, UserVideo
+from django.conf.global_settings import AUTH_USER_MODEL
+from .models import Comment, CustomUser, UserVideo, Video
 
 
 class UserVideoInline(admin.TabularInline):
@@ -13,7 +14,7 @@ class CommentInline(admin.TabularInline):
 
 
 class UserInline(admin.TabularInline):
-    model = User
+    model = CustomUser
     extra = 1
 
 
@@ -25,9 +26,9 @@ class VideoInline(admin.TabularInline):
 admin.site.register([Comment, UserVideo])
 
 
-@admin.register(User)
+@admin.register(CustomUser)
 class UserAdmin(admin.ModelAdmin):
-    model = User
+    model = CustomUser
     inlines = (UserVideoInline,)
 
 

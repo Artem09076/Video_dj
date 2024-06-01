@@ -1,0 +1,7 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% block content %}
+  {% for video in videos %}
+  <p><a href="{% url 'video' %}?id={{video.id}}">{{ video.name }}</a></p>
+  {% endfor %}
+{% endblock %}

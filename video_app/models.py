@@ -1,18 +1,17 @@
-from django.db import models
+from datetime import datetime
 from uuid import uuid4
-from django.utils.translation import gettext_lazy as _
-from datetime import datetime, timezone
+
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.conf.global_settings import AUTH_USER_MODEL
-
-from django.utils import timezone
-
 from django.core.validators import FileExtensionValidator
-
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from django_minio_backend import MinioBackend, iso_date_prefix
 
 def check_date(date: datetime) -> None:
     if date > timezone.now():
-        raise ValidationError(_('Date must be less or equal than current date'))
+        raise ValidationError(_("Date must be less or equal than current date"))
 
 
 class UUIDMixin(models.Model):
@@ -24,7 +23,7 @@ class UUIDMixin(models.Model):
 
 class DatePublicationMixin(models.Model):
     date_publication = models.DateTimeField(
-        _("date publication"), null=False, blank=False, validators=[check_date]
+        _("date publication"), null=False, blank=False, validators=[check_date], auto_now_add=True
     )
 
     class Meta:
@@ -32,13 +31,21 @@ class DatePublicationMixin(models.Model):
 
 
 MAX_LENGHT_NAME = 100
-FILE_EXTENSION = ('mp4', )
+FILE_EXTENSION = ("mp4",)
+
 
 class Video(UUIDMixin, DatePublicationMixin):
     name = models.TextField(
         _("name video"), null=False, blank=False, max_length=MAX_LENGHT_NAME
     )
-    video_file = models.FileField(_("video"), blank=True, null=True, validators=[FileExtensionValidator(FILE_EXTENSION)])
+    video_file = models.FileField(
+        _("video"),
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(FILE_EXTENSION)],
+        storage=MinioBackend(bucket_name='djangob'),
+        upload_to=iso_date_prefix
+    )
     during = models.PositiveIntegerField(_("during"), null=False, blank=False)
 
     def __str__(self) -> str:
@@ -53,11 +60,12 @@ class Video(UUIDMixin, DatePublicationMixin):
 
 class Comment(UUIDMixin, DatePublicationMixin):
     text = models.TextField(_("text"), null=True, blank=False)
-    count_likes = models.PositiveIntegerField(_("count likes"), null=False, blank=True)
+    count_likes = models.PositiveIntegerField(_("count likes"), null=False, blank=True, default=0)
 
     video = models.ForeignKey(
         Video, verbose_name=_("video"), on_delete=models.CASCADE, null=True
     )
+    user = models.ForeignKey(User, verbose_name=_('user'), on_delete=models.CASCADE, null=True)
 
     def __str__(self) -> str:
         return f"{self.text}: {self.count_likes}"
@@ -69,8 +77,10 @@ class Comment(UUIDMixin, DatePublicationMixin):
         verbose_name_plural = _("comments")
 
 
-class User(UUIDMixin):
-    user = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=False)
+class CustomUser(UUIDMixin):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, null=True, blank=False
+    )
     videos = models.ManyToManyField(
         Video, verbose_name=_("videos"), through="UserVideo"
     )
@@ -85,7 +95,7 @@ class User(UUIDMixin):
 
 
 class UserVideo(UUIDMixin):
-    user = models.ForeignKey(User, verbose_name=_("user"), on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, verbose_name=_("user"), on_delete=models.CASCADE)
     video = models.ForeignKey(Video, verbose_name=_("video"), on_delete=models.CASCADE)
 
     def __str__(self) -> str:

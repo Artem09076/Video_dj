@@ -1,18 +1,45 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>Video page</h1>
+      <style>
+        .container {
+            display: grid;
+            place-items: center;
+            height: 100vh;
+        }
+        embed {
+            width: 80%; 
+            height: 500px;
+            margin-bottom: 10px;
+        }
+        p {
+          place-items: 10;
+        }
+    </style>
 
     {% if video %}
-    <ul>
-
-      <li>Name video: {{ video.name }}</li>
-      <li>During: {{ video.during }}</li>
-      <li>Date publication: {{ video.date_publication }}</li>
-      
-    </ul>
-
-    {% else %}
+    <div class="container">
+    <embed src="http://localhost:9000/djangob/{{video.video_file}}" width=70% height="700px" class="video-page">
+      <h1>Name video: {{ video.name }}</h1>
+      <p>Date publication: {{ video.date_publication }}</li></p>
+    </div>
+    {% if request.user.is_authenticated %}
+      <div>
+        <form action="{% url 'video' %}?id={{video.id}}" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{form.as_p}}
+          <button type="submit"> click</button>
+      </form>
+      </div>
+    {% endif %}
+    {% if comments %}
+      <div>
+        {% for comment in comments %}
+        <p>{{comment.text}} by {{comment.user}}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+      {% else %}
       <p>Video not found..</p>
     {% endif %}
 {% endblock %}

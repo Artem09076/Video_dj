@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from dotenv import load_dotenv
-from os import getenv, path
-from django.utils.translation import gettext_lazy as _
 import os
+from os import getenv, path
+
+from django.utils.translation import gettext_lazy as _
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
@@ -42,9 +43,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'drf_yasg',
+    "drf_yasg",
     "rest_framework",
-    "rest_framework.authtoken"
+    "rest_framework.authtoken",
+    'storages',
+    'django_minio_backend',
 ]
 USE_I18N = True
 LANGUAGE_CODE = "ru"
@@ -89,21 +92,23 @@ WSGI_APPLICATION = "video.wsgi.application"
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    "DEFAULT_AUTHENTICATION_CLASSES": [
         #'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 10
+    "PAGE_SIZE": 10,
 }
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
 load_dotenv()
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -151,38 +156,54 @@ STATIC_URL = "static/"
 
 LOCALE_PATH = os.path.join(BASE_DIR, "locale/")
 
+
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+
+if DEBUG:
+    AWS_ACCESS_KEY_ID = getenv('MINIO_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = getenv('MINIO_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = getenv('MINIO_STORAGE_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = getenv('MINIO_API')
+    AWS_S3_USE_SSL = False
+
+MINIO_ENDPOINT = 'localhost:9000'
+MINIO_ACCESS_KEY = getenv('MINIO_ACCESS_KEY_ID')
+MINIO_SECRET_KEY = getenv('MINIO_SECRET_ACCESS_KEY')
+MINIO_USE_HTTPS = False
+MINIO_CONSISTENCY_CHECK_ON_START = True
+MINIO_PRIVATE_BUCKETS = []
+MINIO_PUBLIC_BUCKETS = [
+    'djangob',
+]
+
+
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+MEDIA_URL = "/media/"
 
-TEST_RUNNER = 'tests.runner.PostgresSchemaRunner'
+TEST_RUNNER = "tests.runner.PostgresSchemaRunner"
 
 SWAGGER_SETTINGS = {
     "exclude_namespaces": [],
-    "api_version": '0.1',
+    "api_version": "0.1",
     "api_path": "/",
-    "enabled_methods": [
-        'get',
-        'post',
-        'put',
-        'delete'
-    ],
-    "api_key": '',
+    "enabled_methods": ["get", "post", "put", "delete"],
+    "api_key": "",
     "is_authenticated": False,
     "is_superuser": False,
-    'SECURITY_DEFINITIONS': {
-      'Basic': {
-            'type': 'basic'
-      },
-        'Token': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header',
-            'description': "Token в формате 'Token <token>'"
-        }
-    }
+    "SECURITY_DEFINITIONS": {
+        "Basic": {"type": "basic"},
+        "Token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token в формате Token 'yourtoken'",
+        },
+    },
 }

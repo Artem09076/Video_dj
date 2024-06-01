@@ -14,6 +14,7 @@
     </ul>
 
     {% else %}
-      <p>There are no authors for now..</p>
+      <p>You not have any videos</p>
     {% endif %}
+    <li><a href="{% url 'upload_video' %}">Crate new video</a></li>
 {% endblock %}
