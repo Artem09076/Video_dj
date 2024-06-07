@@ -1,3 +1,10 @@
-{% for video in videos %}
-  <embed src="http://localhost:9000/djangob/{{video.video_file}}">
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% block content %}
+  {% for video in videos %}
+  <div>
+  <embed src="http://localhost:9000/djangob/{{video.cover_video_file}}" width=25% height="auto"/> 
+  <p><a href="{% url 'video' %}?id={{video.id}}">{{ video.name }}</a></p>
+  </div>
   {% endfor %}
+{% endblock %}

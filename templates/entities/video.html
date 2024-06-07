@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-      <style>
+    <style>
         .container {
             display: grid;
             place-items: center;
@@ -13,33 +13,39 @@
             margin-bottom: 10px;
         }
         p {
-          place-items: 10;
+            place-items: 10;
+            
         }
     </style>
 
     {% if video %}
     <div class="container">
-    <embed src="http://localhost:9000/djangob/{{video.video_file}}" width=70% height="700px" class="video-page">
-      <h1>Name video: {{ video.name }}</h1>
-      <p>Date publication: {{ video.date_publication }}</li></p>
+        <embed src="http://localhost:9000/djangob/{{video.video_file}}" width="auto" height="auto" class="video-page">
+        <h1>Name video: {{ video.name }}</h1>
+        {% if video.description %}
+        <br>{{video.description | linebreaks}}
+        {% endif %}
+        <p>Date publication: {{ video.date_publication }}</p>
+        
+        {% if request.user.is_authenticated %}
+        <div>
+            <form action="{% url 'video' %}?id={{video.id}}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit">Click</button>
+            </form>
+        </div>
+        {% endif %}
     </div>
-    {% if request.user.is_authenticated %}
-      <div>
-        <form action="{% url 'video' %}?id={{video.id}}" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{form.as_p}}
-          <button type="submit"> click</button>
-      </form>
-      </div>
-    {% endif %}
+
     {% if comments %}
-      <div>
+    <div>
         {% for comment in comments %}
         <p>{{comment.text}} by {{comment.user}}</p>
         {% endfor %}
-      </div>
+    </div>
     {% endif %}
-      {% else %}
-      <p>Video not found..</p>
+    {% else %}
+    <p>Video not found..</p>
     {% endif %}
 {% endblock %}

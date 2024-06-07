@@ -4,12 +4,28 @@ from django.shortcuts import redirect, render
 from rest_framework import authentication, permissions, viewsets
 from django.http.request import HttpRequest
 from .forms import RegistrationForm, AddVideoForm, AddCommentForm
-from .models import Comment, CustomUser, Video, UserVideo
+from .models import Comment, CustomUser, Video
 from .serializers import CommentSerializer, VideoSerializer
 from django.contrib.auth.forms import AuthenticationForm
+import cv2
+from django.core.files.base import ContentFile
+
+def extract_first_frame(video_path):
+    vidcap = cv2.VideoCapture(video_path)
+    vidcap.set(cv2.CAP_PROP_POS_FRAMES, 1000)
+    success, image = vidcap.read()
+    if success:
+        return image
+    else:
+        return None
+
+
 
 def home_page(request: HttpRequest):
-    videos = Video.objects.all()
+    p = Paginator(Video.objects.all(), 2)
+    num_page = request.GET.get('page', 1)
+    videos = p.get_page(num_page)
+    print(videos.next_page_number)
     return render(
         request,
         "home_page.html",
@@ -23,13 +39,13 @@ def users_video_catalog(request: HttpRequest):
     if not request.user.is_authenticated:
         return redirect("homepage")
     user_id = CustomUser.objects.all().get(user=request.user.id).id
-    instances = Video.objects.filter(customuser=user_id)
+    instances = Video.objects.filter(user=user_id)
     return render(request, 'catalog/videos.html', context={'videos_list': instances})
 
 def user_comment_catalog(request: HttpRequest):
     if not request.user.is_authenticated:
         return redirect("homepage")
-    user_id = str(request.user.id)
+    user_id = CustomUser.objects.all().get(user=request.user.id).id
     instances = Comment.objects.all().filter(user=user_id)
     return render(request, 'catalog/comments.html', context={'comments_list': instances})
 
@@ -39,6 +55,7 @@ def user_comment_catalog(request: HttpRequest):
 
 
 def video_view(request: HttpRequest):
+    errors = ''
     target_id = request.GET.get("id", "")
     video =  Video.objects.get(id=target_id) if target_id else None
     comments = Comment.objects.all().filter(video=video.id) if video is not None else None
@@ -46,7 +63,8 @@ def video_view(request: HttpRequest):
         form = AddCommentForm(request.POST)
         if form.is_valid():
             text = form.cleaned_data.get('text')
-            Comment.objects.create(text=text, user=request.user, video=video)
+            user = CustomUser.objects.all().get(user=request.user.id)
+            Comment.objects.create(text=text, user=user, video=video)
 
         else:
             errors = form.errors
@@ -59,7 +77,8 @@ def video_view(request: HttpRequest):
         context={
             'video': video,
             'comments': comments,
-            'form': form
+            'form': form,
+            'errors': errors
         },
     )
 
@@ -67,7 +86,7 @@ def video_view(request: HttpRequest):
 
 def result_page(request: HttpRequest):
     query = request.GET.get('q')
-    result = Video.objects.filter(name__contains=query)
+    result = Video.objects.filter(name__icontains=query)
     return render(
         request,
         'result.html',
@@ -126,7 +145,7 @@ unsafe_methods = "POST", "DELETE", "PUT"
 
 
 class MyPermission(permissions.BasePermission):
-    def has_permission(self, request, _):
+    def has_permission(self, request: HttpRequest, _):
         if request.method in safe_methods:
             return bool(request.user and request.user.is_authenticated)
         elif request.method in unsafe_methods:
@@ -158,10 +177,17 @@ def video_create(request: HttpRequest):
     if request.method == "POST":
         form = AddVideoForm(request.POST, request.FILES)
         if form.is_valid():
-            video = form.save()
             user = CustomUser.objects.all().get(user=request.user.id)
-            UserVideo.objects.create(user=user, video=video)
-            return redirect('account')
+            cover_video_file = form.cleaned_data['cover_video_file']
+            video_name = form.cleaned_data['name']
+            video_path = form.cleaned_data['video_file'].temporary_file_path()
+            if cover_video_file is None:
+                first_frame = extract_first_frame(video_path)
+                _, buffer = cv2.imencode('.jpg', first_frame)
+                frame_image = ContentFile(buffer.tobytes(), f'first_frame_for_video_{video_name}.jpg')
+                form.cleaned_data['cover_video_file'] = frame_image
+            Video.objects.create(**form.cleaned_data, user=user)
+            return redirect('videos')
 
         else:
             errors = form.errors

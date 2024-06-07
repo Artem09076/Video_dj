@@ -23,8 +23,13 @@
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>
         </li>
         {% endif %}
+        {% if request.user.is_superuser %}
+        <li class="nav-item">
+          <a class="nav-link" href="/admin">Admin</a>
+        </li>
+        {% endif %}
       </ul>
-      <input id="searchBox" type="text">
+      <input id="searchBox" type="text" maxlength="800" placeholder="Что хочешь включить?">
         <button onclick="search()">Search</button>
     </div>
   </nav>

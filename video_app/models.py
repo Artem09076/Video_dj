@@ -46,7 +46,17 @@ class Video(UUIDMixin, DatePublicationMixin):
         storage=MinioBackend(bucket_name='djangob'),
         upload_to=iso_date_prefix
     )
+    cover_video_file = models.ImageField(
+        _('cover video'),
+        blank=True,
+        null=True,
+        storage=MinioBackend(bucket_name='djangob'),
+        upload_to=iso_date_prefix)
     during = models.PositiveIntegerField(_("during"), null=False, blank=False)
+    user = models.ForeignKey('CustomUser', verbose_name=_('user'), on_delete=models.CASCADE, null=True)
+    description = models.TextField(_('discription video'), null=True, blank=True, max_length=1000)
+
+
 
     def __str__(self) -> str:
         return f"{self.name}: {self.during}"
@@ -65,7 +75,7 @@ class Comment(UUIDMixin, DatePublicationMixin):
     video = models.ForeignKey(
         Video, verbose_name=_("video"), on_delete=models.CASCADE, null=True
     )
-    user = models.ForeignKey(User, verbose_name=_('user'), on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey('CustomUser', verbose_name=_('user'), on_delete=models.CASCADE, null=True)
 
     def __str__(self) -> str:
         return f"{self.text}: {self.count_likes}"
@@ -81,10 +91,6 @@ class CustomUser(UUIDMixin):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, null=True, blank=False
     )
-    videos = models.ManyToManyField(
-        Video, verbose_name=_("videos"), through="UserVideo"
-    )
-
     def __str__(self) -> str:
         return f"{self.user}"
 
@@ -94,15 +100,3 @@ class CustomUser(UUIDMixin):
         verbose_name_plural = _("users")
 
 
-class UserVideo(UUIDMixin):
-    user = models.ForeignKey(CustomUser, verbose_name=_("user"), on_delete=models.CASCADE)
-    video = models.ForeignKey(Video, verbose_name=_("video"), on_delete=models.CASCADE)
-
-    def __str__(self) -> str:
-        return f"{self.user.user}: {self.video.name}"
-
-    class Meta:
-        db_table = '"video_data"."user_video"'
-        unique_together = (("user", "video"),)
-        verbose_name = _("relationship user video")
-        verbose_name_plural = _("relationships user video")

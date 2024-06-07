@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>Videos</h1>
+    <h1>{{request.user|upper}} Videos</h1>
 
     {% if videos_list %}
     <ul>
@@ -16,5 +16,5 @@
     {% else %}
       <p>You not have any videos</p>
     {% endif %}
-    <li><a href="{% url 'upload_video' %}">Crate new video</a></li>
+    <li><a href="{% url 'upload_video' %}">Create new video</a></li>
 {% endblock %}

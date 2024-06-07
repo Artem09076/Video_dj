@@ -1,7 +1,37 @@
 {% extends "base_generic.html" %}
 {% load i18n %}
 {% block content %}
-  {% for video in videos %}
+  {% for video in videos.object_list %}
+  <div>
+  <embed src="http://localhost:9000/djangob/{{video.cover_video_file}}" width=25% height="auto"/> 
   <p><a href="{% url 'video' %}?id={{video.id}}">{{ video.name }}</a></p>
+  </div>
   {% endfor %}
+  {% if videos.paginator.num_pages > 1 %}
+  <nav aria-label="...">
+    <ul class="pagination">
+      {% if videos.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ videos.previous_page_number }}">Previous</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">Previous</span>
+      </li>
+      {% endif %}
+      <li class="page-item active" aria-current="page">
+        <span class="page-link">{{videos.number}}</span>
+      </li>
+      {% if videos.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ videos.next_page_number }}">Next</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">Next</span>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
 {% endblock %}
