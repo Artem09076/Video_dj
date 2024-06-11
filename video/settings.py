@@ -207,3 +207,5 @@ SWAGGER_SETTINGS = {
         },
     },
 }
+
+LOGIN_URL = 'login'

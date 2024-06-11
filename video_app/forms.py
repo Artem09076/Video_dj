@@ -22,7 +22,7 @@ class RegistrationForm(UserCreationForm):
 
 class AddVideoForm(ModelForm):
     name = CharField(max_length=100, required=True)
-    during = IntegerField(max_value=120)
+    during = IntegerField(max_value=120, required=True)
     video_file = FileField(required=True)
     description = CharField(max_length=1000, required=False, widget=Textarea)
     cover_video_file = FileField(required=False)

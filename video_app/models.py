@@ -70,8 +70,6 @@ class Video(UUIDMixin, DatePublicationMixin):
 
 class Comment(UUIDMixin, DatePublicationMixin):
     text = models.TextField(_("text"), null=True, blank=False)
-    count_likes = models.PositiveIntegerField(_("count likes"), null=False, blank=True, default=0)
-
     video = models.ForeignKey(
         Video, verbose_name=_("video"), on_delete=models.CASCADE, null=True
     )

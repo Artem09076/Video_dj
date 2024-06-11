@@ -12,4 +12,4 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Comment
-        fields = ["id", "text", "count_likes", "date_publication"]
+        fields = ["id", "text", "date_publication"]

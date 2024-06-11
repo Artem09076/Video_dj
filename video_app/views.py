@@ -9,10 +9,12 @@ from .serializers import CommentSerializer, VideoSerializer
 from django.contrib.auth.forms import AuthenticationForm
 import cv2
 from django.core.files.base import ContentFile
+from django.contrib.auth.decorators import login_required
 
-def extract_first_frame(video_path):
+
+def extract_frame(video_path, num_frames: int = 1000):
     vidcap = cv2.VideoCapture(video_path)
-    vidcap.set(cv2.CAP_PROP_POS_FRAMES, 1000)
+    vidcap.set(cv2.CAP_PROP_POS_FRAMES, num_frames)
     success, image = vidcap.read()
     if success:
         return image
@@ -25,7 +27,6 @@ def home_page(request: HttpRequest):
     p = Paginator(Video.objects.all(), 2)
     num_page = request.GET.get('page', 1)
     videos = p.get_page(num_page)
-    print(videos.next_page_number)
     return render(
         request,
         "home_page.html",
@@ -34,17 +35,15 @@ def home_page(request: HttpRequest):
         },
     )
 
-
+@login_required
 def users_video_catalog(request: HttpRequest):
-    if not request.user.is_authenticated:
-        return redirect("homepage")
     user_id = CustomUser.objects.all().get(user=request.user.id).id
     instances = Video.objects.filter(user=user_id)
     return render(request, 'catalog/videos.html', context={'videos_list': instances})
 
+
+@login_required
 def user_comment_catalog(request: HttpRequest):
-    if not request.user.is_authenticated:
-        return redirect("homepage")
     user_id = CustomUser.objects.all().get(user=request.user.id).id
     instances = Comment.objects.all().filter(user=user_id)
     return render(request, 'catalog/comments.html', context={'comments_list': instances})
@@ -182,10 +181,12 @@ def video_create(request: HttpRequest):
             video_name = form.cleaned_data['name']
             video_path = form.cleaned_data['video_file'].temporary_file_path()
             if cover_video_file is None:
-                first_frame = extract_first_frame(video_path)
-                _, buffer = cv2.imencode('.jpg', first_frame)
-                frame_image = ContentFile(buffer.tobytes(), f'first_frame_for_video_{video_name}.jpg')
-                form.cleaned_data['cover_video_file'] = frame_image
+                first_frame = extract_frame(video_path)
+                if first_frame is None:
+                    first_frame = extract_frame(video_path, 1)
+                    _, buffer = cv2.imencode('.jpg', first_frame)
+                    frame_image = ContentFile(buffer.tobytes(), f'frame_for_video_{video_name}.jpg')
+                    form.cleaned_data['cover_video_file'] = frame_image
             Video.objects.create(**form.cleaned_data, user=user)
             return redirect('videos')
 

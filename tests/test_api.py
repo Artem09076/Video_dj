@@ -4,7 +4,7 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-
+from video_app.views import MyPermission
 from video_app.models import Comment, Video
 
 
@@ -83,5 +83,5 @@ VideoApiTest = create_api_test(
 CommentApiTest = create_api_test(
     Comment,
     "/api/comments/",
-    {"text": "A", "count_likes": 2, "date_publication": timezone.now()},
+    {"text": "A", "date_publication": timezone.now()},
 )

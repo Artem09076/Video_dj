@@ -4,10 +4,10 @@
     <h1>{{request.user|upper}} Videos</h1>
 
     {% if videos_list %}
-    <ul>
+    <ul class="list-group">
 
       {% for video in videos_list %}
-      <li>
+      <li class="list-group-item">
         <a href="{% url 'video'%}?id={{video.id}}">{{ video.name }}</a>
       </li>
       {% endfor %}
