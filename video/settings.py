@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-import os
 from os import getenv, path
 
 from django.utils.translation import gettext_lazy as _
@@ -24,7 +23,7 @@ BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@v@rg7au@vt6j2$l-vxw4+)ax2i2%7nbur&+o_3r!&0=n&k9)+"
+SECRET_KEY = 'django-insecure-@v@rg7au@vt6j2$l-vxw4+)ax2i2%7nbur&+o_3r!&0=n&k9)+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,73 +34,72 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "video_app",
-    "django_storage_celery_results",
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "drf_yasg",
-    "rest_framework",
-    "rest_framework.authtoken",
+    'video_app',
+    'django_storage_celery_results',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'drf_yasg',
+    'rest_framework',
+    'rest_framework.authtoken',
     'storages',
     'django_minio_backend',
 ]
 USE_I18N = True
-LANGUAGE_CODE = "ru"
+LANGUAGE_CODE = 'ru'
 LANGUAGES = [
-    ("en", _("English")),
-    ("ru", _("Russian")),
-    ("fr", _("French")),
+    ('en', _('English')),
+    ('ru', _('Russian')),
+    ('fr', _('French')),
 ]
 
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-ROOT_URLCONF = "video.urls"
+ROOT_URLCONF = 'video.urls'
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [path.join(BASE_DIR, "templates")],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = "video.wsgi.application"
+WSGI_APPLICATION = 'video.wsgi.application'
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        #'rest_framework.authentication.BasicAuthentication',
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 10,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 # Database
@@ -110,31 +108,31 @@ REST_FRAMEWORK = {
 load_dotenv()
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": getenv("PG_DBNAME"),
-        "USER": getenv("PG_USER"),
-        "PASSWORD": getenv("PG_PASSWORD"),
-        "HOST": getenv("PG_HOST"),
-        "PORT": getenv("PG_PORT"),
-        "OPTIONS": {"options": "-c search_path=public,video_data"},
-    }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': getenv('PG_DBNAME'),
+        'USER': getenv('PG_USER'),
+        'PASSWORD': getenv('PG_PASSWORD'),
+        'HOST': getenv('PG_HOST'),
+        'PORT': getenv('PG_PORT'),
+        'OPTIONS': {'options': '-c search_path=public,video_data'},
+    },
 }
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -142,9 +140,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "ru-ru"
+LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 USE_L10N = True
@@ -152,9 +150,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = 'static/'
 
-LOCALE_PATH = os.path.join(BASE_DIR, "locale/")
+LOCALE_PATH = path.join(BASE_DIR, 'locale/')
 
 
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
@@ -177,33 +175,31 @@ MINIO_PUBLIC_BUCKETS = [
 ]
 
 
-
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
-MEDIA_URL = "/media/"
+MEDIA_ROOT = path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
 
-TEST_RUNNER = "tests.runner.PostgresSchemaRunner"
+TEST_RUNNER = 'tests.runner.PostgresSchemaRunner'
 
 SWAGGER_SETTINGS = {
-    "exclude_namespaces": [],
-    "api_version": "0.1",
-    "api_path": "/",
-    "enabled_methods": ["get", "post", "put", "delete"],
-    "api_key": "",
-    "is_authenticated": False,
-    "is_superuser": False,
-    "SECURITY_DEFINITIONS": {
-        "Basic": {"type": "basic"},
-        "Token": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header",
-            "description": "Token в формате Token 'yourtoken'",
+    'exclude_namespaces': [],
+    'api_version': '0.1',
+    'api_path': '/',
+    'enabled_method': ['get', 'post', 'put', 'delete'],
+    'api_key': '',
+    'is_authenticated': False,
+    'is_superuser': False,
+    'SECURITY_DEFINITIONS': {
+        'Basic': {'type': 'basic'},
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': "Token в формате Token 'yourtoken'",
         },
     },
 }

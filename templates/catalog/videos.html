@@ -3,18 +3,55 @@
 {% block content %}
     <h1>{{request.user|upper}} Videos</h1>
 
-    {% if videos_list %}
+    {% if videos %}
     <ul class="list-group">
 
-      {% for video in videos_list %}
+      {% for video in videos %}
       <li class="list-group-item">
         <a href="{% url 'video'%}?id={{video.id}}">{{ video.name }}</a>
+        <form method="post" action="{% url 'delete_video' video.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
       </li>
       {% endfor %}
     </ul>
-
+    {% if videos.paginator.num_pages > 1 %}
+  <nav aria-label="...">
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" href="?page=1">First</a>
+      </li>
+      {% if videos.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ videos.previous_page_number }}">Previous</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">Previous</span>
+      </li>
+      {% endif %}
+      <li class="page-item active" aria-current="page">
+        <span class="page-link">{{videos.number}}</span>
+      </li>
+      {% if videos.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ videos.next_page_number }}">Next</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">Next</span>
+      </li>
+      {% endif %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ p.num_pages }}">Last</a>
+      </li>
+    </ul>
+  </nav>
+  {% endif %}
     {% else %}
       <p>You not have any videos</p>
     {% endif %}
+
     <li><a href="{% url 'upload_video' %}">Create new video</a></li>
 {% endblock %}

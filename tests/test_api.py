@@ -1,19 +1,30 @@
+"""This module include api test."""
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-from video_app.views import MyPermission
+
 from video_app.models import Comment, Video
 
 
 def create_api_test(model_class, url, creation_attrs):
+    """Create api test classes.
+
+    Args:
+        model_class: model class
+        url: api url
+        creation_attrs: Attrs for create model
+
+    Returns:
+        Api test class
+    """
     class ApiTest(TestCase):
         def setUp(self):
             self.client = APIClient()
-            self.user = User(username="user", password="user")
-            self.superuser = User(username="admin", password="admin", is_superuser=True)
+            self.user = User(username='user', password='user')
+            self.superuser = User(username='admin', password='admin', is_superuser=True)
             self.user_token = Token(user=self.user)
             self.superuser_token = Token(user=self.superuser)
 
@@ -28,7 +39,7 @@ def create_api_test(model_class, url, creation_attrs):
             self.client.force_authenticate(user=user, token=token)
 
             self.created_id = model_class.objects.create(**creation_attrs).id
-            instance_url = f"{url}{self.created_id}/"
+            instance_url = f'{url}{self.created_id}/'
 
             self.assertEqual(self.client.options(url).status_code, status.HTTP_200_OK)
 
@@ -37,19 +48,19 @@ def create_api_test(model_class, url, creation_attrs):
             self.assertEqual(self.client.get(url).status_code, status.HTTP_200_OK)
 
             self.assertEqual(
-                self.client.get(instance_url).status_code, status.HTTP_200_OK
+                self.client.get(instance_url).status_code, status.HTTP_200_OK,
             )
 
             self.assertEqual(
-                self.client.get(instance_url).status_code, status.HTTP_200_OK
+                self.client.get(instance_url).status_code, status.HTTP_200_OK,
             )
 
             self.assertEqual(
-                self.client.post(url, creation_attrs).status_code, post_exp
+                self.client.post(url, creation_attrs).status_code, post_exp,
             )
 
             self.assertEqual(
-                self.client.put(instance_url, creation_attrs).status_code, put_exp
+                self.client.put(instance_url, creation_attrs).status_code, put_exp,
             )
 
             self.assertEqual(self.client.delete(instance_url).status_code, delete_exp)
@@ -77,11 +88,11 @@ def create_api_test(model_class, url, creation_attrs):
 
 VideoApiTest = create_api_test(
     Video,
-    "/api/videos/",
-    {"name": "A", "during": 1, "date_publication": timezone.now()},
+    '/api/videos/',
+    {'name': 'A', 'during': 1, 'date_publication': timezone.now()},
 )
 CommentApiTest = create_api_test(
     Comment,
-    "/api/comments/",
-    {"text": "A", "date_publication": timezone.now()},
+    '/api/comments/',
+    {'text': 'A', 'date_publication': timezone.now()},
 )

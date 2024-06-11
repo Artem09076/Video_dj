@@ -10,6 +10,9 @@
   {% if videos.paginator.num_pages > 1 %}
   <nav aria-label="...">
     <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" href="?page=1">First</a>
+      </li>
       {% if videos.has_previous %}
       <li class="page-item">
         <a class="page-link" href="?page={{ videos.previous_page_number }}">Previous</a>
@@ -31,6 +34,9 @@
         <span class="page-link">Next</span>
       </li>
       {% endif %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ p.num_pages }}">Last</a>
+      </li>
     </ul>
   </nav>
   {% endif %}

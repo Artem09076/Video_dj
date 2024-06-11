@@ -36,16 +36,30 @@
             </form>
         </div>
         {% endif %}
+
+        {% if comments %}
+        <div class="list-group">
+            {% for comment in comments %}
+            <div>
+            <p>{{comment.text}} by {{comment.user}}</p>
+
+            {% if request.user  == comment.user.user %}
+            <form method="post" action="{% url 'delete_from_video' comment.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            <form action="{% url 'comment_update' comment.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-info">Update</button>
+              </form>
+            {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% else %}
+        <p>Video not found..</p>
+        {% endif %} 
     </div>
 
-    {% if comments %}
-    <div>
-        {% for comment in comments %}
-        <p>{{comment.text}} by {{comment.user}}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% else %}
-    <p>Video not found..</p>
-    {% endif %}
 {% endblock %}
