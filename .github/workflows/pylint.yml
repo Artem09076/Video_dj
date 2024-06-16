@@ -80,6 +80,10 @@ jobs:
           echo "PG_PASSWORD=123" >> $GITHUB_ENV
           echo "PG_HOST=127.0.0.1" >> $GITHUB_ENV
           echo "PG_PORT=38700" >> $GITHUB_ENV
+          echo "MINIO_ACCESS_KEY_ID=user" >> $GITHUB_ENV
+          echo "MINIO_SECRET_ACCESS_KEY=password" >> $GITHUB_ENV
+          echo "MINIO_STORAGE_BUCKET_NAME=djangob" >> $GITHUB_ENV
+          echo "MINIO_API=http://0.0.0.0:9000" >> $GITHUB_ENV
 
       - name: Run migrations
         run: python manage.py migrate
