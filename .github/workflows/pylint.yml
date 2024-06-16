@@ -66,6 +66,8 @@ jobs:
 
       - name: Setup MinIO bucket
         run: |
+          wget https://dl.minio.io/client/mc/release/linux-amd64/mc
+          chmod +x mc
           mc alias set minio http://localhost:9000 user password
           mc mb minio/djangob
 
