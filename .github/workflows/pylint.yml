@@ -37,3 +37,44 @@ jobs:
     - name: Flake8
       run: flake8 .
 
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: videos_db
+          POSTGRES_USER: sirius
+          POSTGRES_PASSWORD: 123
+        ports:
+          - 38700:5432
+
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set environment variables
+        run: |
+          echo "PG_DBNAME=videos_db" >> $GITHUB_ENV
+          echo "PG_USER=sirius" >> $GITHUB_ENV
+          echo "PG_PASSWORD=123" >> $GITHUB_ENV
+          echo "PG_HOST=127.0.0.1" >> $GITHUB_ENV
+          echo "PG_PORT=38700" >> $GITHUB_ENV
+
+      - name: Run migrations
+        run: python manage.py migrate
+
+      - name: Run tests
+        run: python manage.py test tests
