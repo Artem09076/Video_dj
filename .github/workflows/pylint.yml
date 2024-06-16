@@ -37,12 +37,12 @@ jobs:
 
 
       - name: Start PostgreSQL service
-        uses: docker://postgres:13
-        env:
-          POSTGRES_DB: videos_db
-          POSTGRES_USER: sirius
-          POSTGRES_PASSWORD: 123
-          ports: 38700:5432
+        run: |
+          docker run -d --name project -p 38700:5432 \
+          -e POSTGRES_USER=sirius \
+          -e POSTGRES_PASSWORD=123 \
+          -e POSTGRES_DB=videos_db \
+          postgres
 
       - name: Start MinIO service
         run: |
