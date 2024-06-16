@@ -56,4 +56,5 @@ jobs:
           PG_HOST: 127.0.0.1
           PG_PORT: 38700
         run: |
+          python manage.py migrate
           python manage.py test tests
