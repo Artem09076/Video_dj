@@ -46,7 +46,7 @@ jobs:
           pip install -r requirements.txt
       - run: wget https://dl.min.io/client/mc/release/linux-amd64/mc
       - run: chmod +x ./mc
-      - run: ./mc alias set minio http://127.0.0.1:9000 user password
+      - run: ./mc alias set minio http://0.0.0.0:9000 user password
       - run: ./mc mb --ignore-existing minio/djangob
       - name: Run tests
         env:
