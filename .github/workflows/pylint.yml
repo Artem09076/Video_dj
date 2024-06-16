@@ -47,17 +47,10 @@ jobs:
       - name: Create test bucket
         run: |
           python -m pip install minio
-          python -c "\
-            from minio import Minio \
-            client = Minio( \
-                'localhost:9000', \
-                access_key='user', \
-                secret_key='password', \
-                secure=False \
-            ) \
-            if not client.bucket_exists('djangob'): \
-                client.make_bucket('djangob') \
-          "
+          python -c "from minio import Minio; \
+          client = Minio('localhost:9000', access_key='minioadmin', secret_key='minioadmin', secure=False); \
+          if not client.bucket_exists('testbucket'): \
+              client.make_bucket('testbucket')"
       - name: Run tests
         env:
           MINIO_API: http://localhost:9000
