@@ -5,15 +5,65 @@ jobs:
     name: Flake8
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Установка Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.10.6
-    - name: Установка зависимостей
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8==3.9.0 wemake-python-styleguide==0.15.3 bandit==1.7.2
-    - name: Flake8
-      run: flake8 .
+      - uses: actions/checkout@v2
+      - name: Установка Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10.6
+      - name: Установка зависимостей
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8==3.9.0 wemake-python-styleguide==0.15.3 bandit==1.7.2
+      - name: Flake8
+        run: flake8 .
 
+  tests:
+    name: Tests Django
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: sirius
+          POSTGRES_PASSWORD: 123
+          POSTGRES_DB: videos_db
+        ports:
+          - 38700:5432
+      minio:
+        image: minio/minio
+        ports:
+          - 9000:9000
+        options: >-
+          --name minio
+          -e "MINIO_ACCESS_KEY=user"
+          -e "MINIO_SECRET_KEY=password"
+          minio/minio server /data
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Create test bucket
+        run: |
+          python -m pip install minio
+          python -c "
+            import os
+            from minio import Minio
+            client = Minio(
+                'localhost:9000',
+                access_key='user',
+                secret_key='password',
+                secure=False
+            )
+            if not client.bucket_exists('djangob'):
+                client.make_bucket('djangob')
+          "
+      - name: Run tests
+        env:
+          MINIO_API: http://localhost:9000
+          MINIO_ACCESS_KEY_ID: user
+          MINIO_SECRET_ACCESS_KEY: minioadmin
+          MINIO_STORAGE_BUCKET_NAME: djangob
+        run: |
+          python manage.py test tests
