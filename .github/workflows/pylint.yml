@@ -46,10 +46,10 @@ jobs:
 
       - name: Start MinIO service
         run: |
-          docker run -d -p 9000:9000 \
-            -e MINIO_ACCESS_KEY=user \
-            -e MINIO_SECRET_KEY=password \
-            minio/minio:RELEASE.2021-10-14T00-12-44Z server /data
+          docker run -d -p 9000:9000 -p 9001:9001 \
+          -e "MINIO_ROOT_USER=sirius" \
+          -e "MINIO_ROOT_PASSWORD=123" \
+          minio/minio server /data --console-address ":9001"
         env:
           PG_DBNAME: videos_db
           PG_USER: sirius
