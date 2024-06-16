@@ -287,6 +287,7 @@ VideoViewSet = create_viewsets(Video, VideoSerializer)
 CommentViewSet = create_viewsets(Comment, CommentSerializer)
 
 
+@login_required
 def account_page(request: HttpRequest):
     """Create account page template.
 
