@@ -30,6 +30,13 @@ jobs:
             POSTGRES_DB: videos_db
           ports:
           - 38700:5432
+        minio:
+            image: minio/minio
+            env:
+              MINIO_ACCESS_KEY: user
+              MINIO_SECRET_KEY: password
+            ports:
+              - "9000:9000"
       steps:
       - uses: actions/checkout@v2
       - name: Установка Python
@@ -48,6 +55,10 @@ jobs:
           PG_USER: sirius
           PG_PASSWORD: 123
           PG_DBNAME: videos_db
+          MINIO_ACCESS_KEY_ID: user
+          MINIO_SECRET_ACCESS_KEY: password
+          MINIO_STORAGE_BUCKET_NAME: djangob
+          MINIO_API: http://0.0.0.0:9000
         run: |
           python3 manage.py test tests
 
