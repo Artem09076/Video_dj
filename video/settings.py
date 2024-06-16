@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from os import getenv, path
-
+import sys
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
@@ -173,7 +173,10 @@ MINIO_PRIVATE_BUCKETS = []
 MINIO_PUBLIC_BUCKETS = [
     'djangob',
 ]
-
+if 'test' in sys.argv:
+    MINIO_ENABLED = False  # Отключаем MinIO в тестовом режиме
+else:
+    MINIO_ENABLED = True  # Включаем MinIO в остальных режимах
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
