@@ -17,47 +17,47 @@ jobs:
       - name: Flake8
         run: flake8 .
 
-  # tests:
-  #   name: Tests Django
-  #   runs-on: ubuntu-latest
-  #   services:
-  #     postgres:
-  #       image: postgres
-  #       env:
-  #         POSTGRES_USER: sirius
-  #         POSTGRES_PASSWORD: 123
-  #         POSTGRES_DB: videos_db
-  #       ports:
-  #         - 38700:5432
-  #     minio:
-  #       image: minio/minio
-  #       ports:
-  #         - 9000:9000
-  #       options: >-
-  #         --name minio
-  #         -e "MINIO_ACCESS_KEY=user"
-  #         -e "MINIO_SECRET_KEY=password"
-  #         minio/minio server /data
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Install dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install -r requirements.txt
-  #     - name: Create test bucket
-  #       run: |
-  #         python -m pip install minio
-  #         python -c """
-  #         from minio import Minio
-  #         client = Minio('localhost:9000', access_key='minioadmin', secret_key='minioadmin', secure=False)
-  #         if not client.bucket_exists('djangob'):
-  #             client.make_bucket('djangob')
-  #                   """
-  #     - name: Run tests
-  #       env:
-  #         MINIO_API: http://localhost:9000
-  #         MINIO_ACCESS_KEY_ID: user
-  #         MINIO_SECRET_ACCESS_KEY: minioadmin
-  #         MINIO_STORAGE_BUCKET_NAME: djangob
-  #       run: |
-  #         python manage.py test tests
+  tests:
+    name: Tests Django
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: sirius
+          POSTGRES_PASSWORD: 123
+          POSTGRES_DB: videos_db
+        ports:
+          - 38700:5432
+      minio:
+        image: minio/minio
+        ports:
+          - 9000:9000
+        options: >-
+          --name minio
+          -e "MINIO_ACCESS_KEY=user"
+          -e "MINIO_SECRET_KEY=password"
+          minio/minio server /data
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - run: wget https://dl.min.io/client/mc/release/linux-amd64/mc
+      - run: chmod +x ./mc
+      - run: ./mc alias set minio http://127.0.0.1:9000 user password
+      - run: ./mc mb --ignore-existing minio/djangob
+      - name: Run tests
+        env:
+          MINIO_API: http://localhost:9000
+          MINIO_ACCESS_KEY_ID: user
+          MINIO_SECRET_ACCESS_KEY: password
+          MINIO_STORAGE_BUCKET_NAME: djangob
+          PG_DBNAME: videos_db
+          PG_USER: sirius
+          PG_PASSWORD: 123
+          PG_HOST: 127.0.0.1
+          PG_PORT: 38700
+        run: |
+          python manage.py test tests
