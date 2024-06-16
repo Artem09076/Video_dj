@@ -53,11 +53,11 @@ jobs:
         wget https://dl.min.io/client/mc/release/linux-amd64/mc
         chmod +x mc
         mv mc /usr/local/bin/
-    - name: Wait for services to be ready
+    - name: Wait for MinIO to be ready
       run: |
-        apt-get install -y netcat
-        while ! nc -z localhost 9000; do   
-          sleep 1
+        until curl --output /dev/null --silent --head --fail http://localhost:9000; do
+          echo 'Waiting for MinIO to be ready...'
+          sleep 5
         done
     - name: Configure mc and create bucket
       run: |
